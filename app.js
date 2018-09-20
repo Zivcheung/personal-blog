@@ -4,9 +4,20 @@ const static = require("koa-static");
 const views = require("koa-views");
 const logger = require("koa-logger");
 const {join} = require("path");
+const koaBody = require("koa-body");
+const koaSession = require("koa-session");
 
 //generate Koa instance
 const app = new Koa();
+
+//koaSession
+const CONFIG={
+    key:"SID",
+    maxAge:60*60*1000,
+    rolling:true,
+}
+app.keys = ["mykeymyblog"]
+app.use(koaSession(CONFIG,app));
 
 //logger 
 app.use(logger());
@@ -18,6 +29,9 @@ app.use(static(join(__dirname,"public")));
 app.use(views(join(__dirname,"views"),{
     extension:"pug"
 }));
+
+//body parser 
+app.use(koaBody());
 
 //register router into koa middleware
 app.use(router.routes());
