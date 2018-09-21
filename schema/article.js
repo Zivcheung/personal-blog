@@ -4,7 +4,10 @@ const artiSchema = new mongoose.Schema({
     title: String,
     tag: String,
     content: String,
-    author: String
+    author: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"users"
+    }
 
     }, {
             versionKey: false,

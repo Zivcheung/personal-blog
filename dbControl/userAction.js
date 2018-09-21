@@ -38,7 +38,8 @@ async function register(ctx) {
         //set session after set cookies
         ctx.session = {
             username: username,
-            _id: uindb._id,
+            uid: uindb._id,
+            avatar:uindb.avatar
         }
 
         await ctx.render("isOk", {
@@ -75,12 +76,15 @@ async function login(ctx) {
 
         if (isMatch) {
             ctx.cookies.set("username", username, cookieConfig);
-            ctx.cookies.set("_id", findRes[0]._id, cookieConfig);
+            ctx.cookies.set("uid", findRes[0]._id, cookieConfig);
             //set session after set cookies
             ctx.session = {
                 username: username,
-                _id: findRes[0]._id,
+                uid: findRes[0]._id,
+                avatar:findRes[0].avatar
             }
+            console.log(findRes[0]._id);
+            console.log(ctx.session);
             await ctx.render("isOk", {
                 status: "登陆成功"
             });

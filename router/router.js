@@ -1,6 +1,6 @@
 const Router = require("koa-router");
 const { register, login, logout } = require("../dbControl/userAction");
-const {addArticle} = require("../dbControl/articleAction");
+const {addArticle,getArtiList} = require("../dbControl/articleAction");
 
 
 const router = new Router();
@@ -9,9 +9,11 @@ const router = new Router();
 
 router.get('/', async (ctx) => {
 
-    await ctx.render("./index", {
-        session: ctx.session,
-    });
+    await getArtiList(ctx);
+    // await ctx.render("index",{
+    //     artList:[],
+    //     title:"main"
+    // });
 });
 
 router.get(/^\/user\/(?=login|register)/, async (ctx) => {
@@ -38,11 +40,17 @@ router.get("/user/logout", async (ctx) => {
 router.get("/article", async (ctx) => {
     await ctx.render("add-article",{
         title:"文章发表页",
+        session:ctx.session,
     });
 });
     // add article
 router.post("/article", async (ctx) => {
+    
    await addArticle(ctx);
+});
+    //get article list
+router.get("/page:page",async (ctx)=>{
+    await getArtiList(ctx);
 });
 
 module.exports = router;

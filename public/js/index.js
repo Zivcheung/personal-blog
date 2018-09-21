@@ -12,10 +12,10 @@ layui.use(["element", "laypage"], () => {
     count: $("#laypage").data("maxnum"),
     limit: 2,
     groups: 3,
-    curr: location.pathname.replace("/page/", ""),
+    curr: location.pathname.replace("/page", ""),
     jump(obj, f){
       $("#laypage a").each((i, v) => {
-        let pageValue = `/page/${$(v).data("page")}`
+        let pageValue = `/page${$(v).data("page")}`
         v.href = pageValue
       })
     }
