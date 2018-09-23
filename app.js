@@ -7,6 +7,7 @@ const {join} = require("path");
 const koaBody = require("koa-body");
 const koaSession = require("koa-session");
 const multer = require("multer");
+const compressor = require("koa-compress");
 
 //generate Koa instance
 const app = new Koa();
@@ -22,6 +23,12 @@ app.use(koaSession(CONFIG,app));
 
 //logger 
 app.use(logger());
+
+//compressor
+app.use(compressor({
+    threshold:1024,
+    flush:require("zlib").Z_SYNC_FLUSH
+}));
 
 //static folder
 app.use(static(join(__dirname,"./public")));
