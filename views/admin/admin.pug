@@ -35,7 +35,7 @@ html
     .layui-side.layui-bg-black
       .layui-side-scroll
         ul(lay-filter="list").layui-nav.layui-nav-tree
-          if role > 1
+          if session.power==="administrator"
             li.layui-nav-item
               a(href="/admin/user") 用户管理
           li.layui-nav-item
@@ -43,7 +43,7 @@ html
           li.layui-nav-item
             a(href="/admin/comment") 评论管理
           li.layui-nav-item
-            a(href="/admin/userface") 头像上传
+            a(href="/admin/icon") 头像上传
     // 后台管理主体部分
     .layui-body
       block main

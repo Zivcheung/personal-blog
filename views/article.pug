@@ -32,9 +32,9 @@ block contents
           div.other-info.text-center
             span= article.author.username
             span &nbsp;&nbsp;发表于：
-            span= article.created.toLocaleString()
+            span= article.create.toLocaleString()
             span &nbsp;分类：
-            span= article.tips
+            span= article.tag
           //- 文章内容
           div(style="padding:10px;").article-detail!= article.content
             
@@ -55,12 +55,12 @@ block contents
             //-     p.time 2018-06-29 13:19:13
             //-   .she-said.
             //-     这是评论的内容
-            each info in comment
+            each info in comments
               li
-                img(src=info.from.avatar)
+                img(src=info.author.avatar)
                 div
-                  p.author= info.from.username
-                  p.time= info.created.toLocaleString()
+                  p.author= info.author.username
+                  p.time= info.create.toLocaleString()
                 .she-said!= info.content
 
       //- 右侧公告

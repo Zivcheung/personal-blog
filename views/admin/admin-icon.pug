@@ -2,11 +2,12 @@ extends ./admin
 
 block main
   div 头像上传
+
     button(type="button")#upload.layui-btn.layui-btn-danger
       i.layui-icon
       |上传图片
     .layui-inline.layui-word-aux
-      |这里以限制 60KB 为例
+      |这里以限制 200kb 为例
 
 
   script.
@@ -19,7 +20,7 @@ block main
       upload.render({
         elem: '#upload'
         ,url: '/upload'
-        ,size: 60 //限制文件大小，单位 KB
+        ,size:1000
         ,done(res){
           layer.alert(res.message)
         }

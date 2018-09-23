@@ -6,6 +6,7 @@ const logger = require("koa-logger");
 const {join} = require("path");
 const koaBody = require("koa-body");
 const koaSession = require("koa-session");
+const multer = require("multer");
 
 //generate Koa instance
 const app = new Koa();
@@ -23,7 +24,7 @@ app.use(koaSession(CONFIG,app));
 app.use(logger());
 
 //static folder
-app.use(static(join(__dirname,"public")));
+app.use(static(join(__dirname,"./public")));
 
 //views
 app.use(views(join(__dirname,"views"),{

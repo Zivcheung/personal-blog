@@ -1,8 +1,6 @@
-const schema = require("../schema/article");
-const db = require("../schema/db");
+const artiModel = require("../model/article");
+const commentModel = require("../model/comment");
 
-//create article model for mongoose
-const artiModel = db.model("articles", schema);
 
 async function addArticle(ctx) {
     if (ctx.session.isNew) {
@@ -42,37 +40,67 @@ async function addArticle(ctx) {
 
 async function getArtiList(ctx) {
     const sumOfArti = await artiModel.estimatedDocumentCount();
-    const pageLoad = 5;
-    let pageNum = ctx.params.page||1;//page number start from 1
-    console.log(ctx.params.page);
-    console.log(22);
+    const pageLoad = 3;
+    let pageNum = ctx.params.page || 1;//page number start from 1
     pageNum--;
-    try{
+    try {
         const artiList = await artiModel
-        .find()
-        .sort("-create")
-        .skip(pageNum*pageLoad)
-        .limit(pageLoad)
-        .populate({
-            path:"author",
-            select:"_id avatar username"
-        });
+            .find()
+            .sort("-create")
+            .skip(pageNum * pageLoad)
+            .limit(pageLoad)
+            .populate({
+                path: "author",
+                select: "_id avatar username"
+            });
         console.log(sumOfArti);
-        // console.log(artiList);
-        await ctx.render("index",{
-            artList:artiList,
-            session:ctx.session,
-            maxNum:sumOfArti
+        await ctx.render("index", {
+            artList: artiList,
+            session: ctx.session,
+            maxNum: sumOfArti
         });
-        
-    }catch(err){
+
+    } catch (err) {
         const errMsg = []
         console.log("article list loading fails");
         console.log(err);
     }
-    
-    
+
+
+}
+
+async function articlePage(ctx) {
+    const articleID = ctx.params.id;
+    const userInfo = ctx.session;
+    try {
+        const artData = await artiModel.findById(articleID)
+            .populate({
+                path: "author",
+                select: "_id username"
+            });
+        const commentData = await commentModel.find({ article: articleID })
+            .sort("-create")
+            .populate({
+                path:"author",
+                select:"avatar username"
+            }); 
+        await ctx.render("article", {
+            article: artData,
+            comments: commentData,
+            session:userInfo
+        });
+
+
+    } catch (err) {
+        console.log(err);
+        await ctx.render("isOk", {
+            status: err
+        });
+
+    }
+
 }
 
 module.exports.addArticle = addArticle;
 module.exports.getArtiList = getArtiList;
+module.exports.articlePage = articlePage;

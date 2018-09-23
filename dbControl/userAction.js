@@ -1,8 +1,5 @@
-const userSchema = require("../schema/user");
-const db = require("../schema/db");
 const shaHash = require("../util/encrypt")
-
-const userModel = db.model("users", userSchema);
+const userModel = require("../model/user");
 
 const cookieConfig = {
     domain: "localhost",
@@ -28,10 +25,14 @@ async function register(ctx) {
         }
 
         const encryPass = shaHash(password);
-        const uindb = await userModel.create({
+        const userInfo = {
             username: username,
             password: encryPass,
-        });
+        };
+        if(username==="admin"){
+            userInfo.power="administrator";
+        }
+        const uindb = await userModel.create(userInfo);
 
         ctx.cookies.set("username", username, cookieConfig);
         ctx.cookies.set("_id", uindb._id, cookieConfig);
@@ -39,7 +40,8 @@ async function register(ctx) {
         ctx.session = {
             username: username,
             uid: uindb._id,
-            avatar:uindb.avatar
+            avatar: uindb.avatar,
+            power:uindb.power
         }
 
         await ctx.render("isOk", {
@@ -81,10 +83,9 @@ async function login(ctx) {
             ctx.session = {
                 username: username,
                 uid: findRes[0]._id,
-                avatar:findRes[0].avatar
+                avatar: findRes[0].avatar,
+                power:findRes[0].power
             }
-            console.log(findRes[0]._id);
-            console.log(ctx.session);
             await ctx.render("isOk", {
                 status: "登陆成功"
             });
